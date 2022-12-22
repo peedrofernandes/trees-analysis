@@ -1,3 +1,5 @@
 **/.history
 **/.vscode
 **/*.o
+files/*
+!files/.gitkeep

@@ -4,6 +4,6 @@ gcc ./trees/main.c ./trees/avl-tree/avltree-counter.c ./trees/b-tree/btree-count
 
 ./trees/main.o
 
-./image-generator/venv/bin/python ./image-generator/main.py
+./image-generator/venv/bin/python ./image-generator/generateScatteredPoints.py
 
 

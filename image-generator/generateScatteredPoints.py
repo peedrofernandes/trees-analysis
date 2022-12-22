@@ -48,19 +48,19 @@ rnData = [[int(rnWorst.split()[1]), float(rnMid.split()[1])] for (rnWorst, rnMid
 x = [i for i in range(1, 1001)]
 
 # Pior caso
-generate_png(x, [y[0] for y in avlData], "green", "files/worst.png")
-generate_png(x, [y[0] for y in b1Data], "black", "files/worst.png")
-generate_png(x, [y[0] for y in b5Data], "blue", "files/worst.png")
-generate_png(x, [y[0] for y in b10Data], "orange", "files/worst.png")
-generate_png(x, [y[0] for y in rnData], "red", "files/worst.png")
+generate_png(x, [y[0] for y in avlData], "green", "files/worstCaseScattered.png")
+generate_png(x, [y[0] for y in b1Data], "black", "files/worstCaseScattered.png")
+generate_png(x, [y[0] for y in b5Data], "blue", "files/worstCaseScattered.png")
+generate_png(x, [y[0] for y in b10Data], "orange", "files/worstCaseScattered.png")
+generate_png(x, [y[0] for y in rnData], "red", "files/worstCaseScattered.png")
 
 
 # Caso médio
-generate_png(x, [y[1] for y in avlData], "green", "files/medium.png")
-generate_png(x, [y[1] for y in b1Data], "black", "files/medium.png")
-generate_png(x, [y[1] for y in b5Data], "blue", "files/medium.png")
-generate_png(x, [y[1] for y in b10Data], "orange", "files/medium.png")
-generate_png(x, [y[1] for y in rnData], "red", "files/medium.png")
+generate_png(x, [y[1] for y in avlData], "green", "files/avgCaseScattered.png")
+generate_png(x, [y[1] for y in b1Data], "black", "files/avgCaseScattered.png")
+generate_png(x, [y[1] for y in b5Data], "blue", "files/avgCaseScattered.png")
+generate_png(x, [y[1] for y in b10Data], "orange", "files/avgCaseScattered.png")
+generate_png(x, [y[1] for y in rnData], "red", "files/avgCaseScattered.png")
 
 # generate_png(x, [y[0] for y in avlData], "red", "../files/avl.png")
 # generate_png(x, [y[1] for y in avlData], "blue", "../files/avl.png")

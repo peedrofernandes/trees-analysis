@@ -12,6 +12,28 @@ typedef struct btree {
   int order;
 } Btree;
 
+void destroyBtreeNode(Btree* btree, NodeB *node) {
+  if (node == NULL)
+    return;
+
+  for (int i = 0; i < btree->order * 2 + 2; i++) {
+    destroyBtreeNode(btree, node->children[i]);
+  }
+
+  free(node->children);
+  node->children = NULL;
+  free(node->keys);
+  node->keys = NULL;
+  free(node->father);
+  node->father = NULL;
+  free(node);
+}
+
+void destroyBtree(Btree* btree) {
+  destroyBtreeNode(btree, btree->root);
+  free(btree);
+}
+
 // This find the index that the element should be inserted, given a sorted array
 int findIndex(int* arr, int size, int key, int *qtd) {
   int index = 0;

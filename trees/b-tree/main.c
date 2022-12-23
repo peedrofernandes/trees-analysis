@@ -3,7 +3,7 @@
 #include "btree-new.h"
 
 int main() {
-  Btree *btree = createBtree(2);
+  Btree *btree = createBtree(1);
 
   int keys[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
   int size = 9;

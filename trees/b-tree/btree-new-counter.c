@@ -13,8 +13,9 @@ typedef struct btree {
 } Btree;
 
 void destroyBtreeNode(Btree* btree, NodeB *node) {
-  if (node == NULL)
+  if (node == NULL) {
     return;
+  }
 
   for (int i = 0; i < btree->order * 2 + 2; i++) {
     destroyBtreeNode(btree, node->children[i]);
@@ -24,9 +25,8 @@ void destroyBtreeNode(Btree* btree, NodeB *node) {
   node->children = NULL;
   free(node->keys);
   node->keys = NULL;
-  free(node->father);
-  node->father = NULL;
   free(node);
+  node = NULL;
 }
 
 void destroyBtree(Btree* btree) {
@@ -117,43 +117,57 @@ void splitNodes(Btree *btree, NodeB **node, NodeB **left, NodeB **right, int *qt
   NodeB *l = createBtreeNode(btree, qtd);
   NodeB *r = createBtreeNode(btree, qtd);
 
-  NodeB* cur = *node;
   int order = btree->order;
   int max = order * 2;
 
   *qtd += 2;
   for (int i = 0; i < order; i++) {
-    l->keys[i] = cur->keys[i];
-    l->children[i] = cur->children[i];
+    l->keys[i] = (*node)->keys[i];
+    if ((*node)->children[i] != NULL) {
+      l->children[i] = (*node)->children[i];
+      l->children[i]->father = l;
+    }
     *qtd += 4;
   }
-  l->children[order] = cur->children[order];
-  r->children[0] = cur->children[order + 1];
+  if ((*node)->children[order] != NULL) {
+    l->children[order] = (*node)->children[order];
+    l->children[order]->father = l;
+  }
+  if ((*node)->children[order + 1] != NULL) {
+    r->children[0] = (*node)->children[order + 1];
+    r->children[0]->father = r;
+  }
   *qtd += 2;
   for (int i = order + 1; i <= max; i++) {
-    r->keys[i - (order + 1)] = cur->keys[i];
-    r->children[i - order] = cur->children[i + 1];
+    r->keys[i - (order + 1)] = (*node)->keys[i];
+    if ((*node)->children[i + 1] != NULL) {
+      r->children[i - order] = (*node)->children[i + 1];
+      r->children[i - order]->father = r;
+    }
     *qtd += 4;
   }
 
   // If the node does not have a father, it is the root of the tree.
   // In this case, the tree needs a new root.
   *qtd += 1;
-  if (cur->father == NULL) {
-    cur->father = createBtreeNode(btree, qtd);
-    btree->root = cur->father;
+  if ((*node)->father == NULL) {
+    (*node)->father = createBtreeNode(btree, qtd);
+    btree->root = (*node)->father;
     *qtd += 2;
   }
 
-  l->father = cur->father;
-  r->father = cur->father;
+  l->father = (*node)->father;
+  r->father = (*node)->father;
   l->qtdKeys = order;
   r->qtdKeys = order;
 
   *left = l;
   *right = r;
 
+  free((*node));
+  (*node) = NULL;
   free(*node);
+  (*node) = NULL;
 
   *qtd += 14;
 }

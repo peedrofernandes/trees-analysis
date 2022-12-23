@@ -5,5 +5,6 @@ gcc ./trees/newmain.c ./trees/avl-tree/avltree-counter.c ./trees/b-tree/btree-ne
 ./trees/main.o
 
 ./image-generator/venv/bin/python ./image-generator/generateScatteredPoints.py
+./image-generator/venv/bin/python ./image-generator/generateRegression.py
 
 

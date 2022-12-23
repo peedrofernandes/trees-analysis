@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 
+colorSet = ["blue", "magenta", "green", "black", "red"]
+labelSet = ["Avl Tree", "B-tree dg.1", "B-tree dg.5", "B-tree dg.10", "Red-black tree"]
+x = [i for i in range(1, 1001)]
 
 def generate_png(x, y, color, path):
   # plt.scatter(x, y, color)
@@ -52,10 +55,6 @@ files = {
 data = extractDataFromFile(files)
 yWorst = [[y[0] for y in di] for di in data]
 yAvg = [[y[1] for y in di] for di in data]
-colorSet = ["blue", "magenta", "green", "black", "red"]
-labelSet = ["Avl Tree", "B-tree dg.1", "B-tree dg.5", "B-tree dg.10", "Red-black tree"]
-
-x = [i for i in range(1, 1001)]
 
 # Pior caso
 generate_scatter(x, yWorst, colorSet, labelSet, "files/worstCaseScattered.png")

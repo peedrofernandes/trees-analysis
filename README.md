@@ -1,4 +1,4 @@
-[🇧🇷 Ver em Português](./README-ptbr.md)
+[🇧🇷 Ver em Português](https://github.com/peedrofernandes/trees-analysis/blob/main/README-pt-BR.md)
 
 # Trees Analysis
 

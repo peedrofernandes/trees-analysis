@@ -1,4 +1,4 @@
-[🇺🇸 🇬🇧 View in English](./README.md)
+[🇺🇸 🇬🇧 View in English](https://github.com/peedrofernandes/trees-analysis/blob/main/README.md)
 
 # Análise de Árvores
 

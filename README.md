@@ -47,9 +47,17 @@ Then navigate to the directory in which you just cloned the repository and run t
 
 It will automatically run everything that it needs to run. After that, check the result files (especially the .png files) and see if the result is according to this:
 
-(insert png files here)
+![worstCaseScattered](https://user-images.githubusercontent.com/82897023/209393267-f071480d-7624-4a4c-bb6e-ec9c66c74264.png)
+![worstCaseFunctions](https://user-images.githubusercontent.com/82897023/209393228-454b65f9-cdb3-4589-a004-a6d8b2557576.png)
+
+![avgCaseScattered](https://user-images.githubusercontent.com/82897023/209393218-152be260-e3d7-4526-8f14-137f04aefc1f.png)
+![avgCaseFunctions](https://user-images.githubusercontent.com/82897023/209393263-894f8a1a-21a9-44bb-8a65-5b3b352a2bd4.png)
+
+
+
 
 In case of any errors, please contact me:
+
 
 [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/peedrofernandes)
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](gm.pedro.fernandes@gmail.com)

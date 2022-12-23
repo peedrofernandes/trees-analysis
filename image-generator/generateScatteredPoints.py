@@ -11,6 +11,15 @@ def generate_png(x, y, color, path):
   plt.scatter(x, y, 1, color)
   plt.savefig(path)
 
+def generate_scatter(x, y, colorSet, labelSet, path):
+  plt.clf()
+  for i, yi in enumerate(y):
+    plt.scatter(x, yi, 2, colorSet[i], label=labelSet[i])
+  plt.legend(loc='upper right', scatterpoints=1, markerscale=8)
+  plt.savefig(path)
+
+
+
 avlFile.readline()
 b1File.readline()
 b5File.readline()
@@ -47,25 +56,32 @@ rnData = [[int(rnWorst.split()[1]), float(rnMid.split()[1])] for (rnWorst, rnMid
 
 x = [i for i in range(1, 1001)]
 
-# Pior caso
-generate_png(x, [y[0] for y in avlData], "green", "files/worstCaseScattered.png")
-generate_png(x, [y[0] for y in b1Data], "black", "files/worstCaseScattered.png")
-generate_png(x, [y[0] for y in b5Data], "blue", "files/worstCaseScattered.png")
-generate_png(x, [y[0] for y in b10Data], "orange", "files/worstCaseScattered.png")
-generate_png(x, [y[0] for y in rnData], "red", "files/worstCaseScattered.png")
+# # Pior caso
+# generate_png(x, [y[0] for y in avlData], "green", "files/worstCaseScattered.png")
+# generate_png(x, [y[0] for y in b1Data], "black", "files/worstCaseScattered.png")
+# generate_png(x, [y[0] for y in b5Data], "blue", "files/worstCaseScattered.png")
+# generate_png(x, [y[0] for y in b10Data], "orange", "files/worstCaseScattered.png")
+# generate_png(x, [y[0] for y in rnData], "red", "files/worstCaseScattered.png")
 
+
+# # Caso médio
+# generate_png(x, [y[1] for y in avlData], "green", "files/avgCaseScattered.png")
+# generate_png(x, [y[1] for y in b1Data], "black", "files/avgCaseScattered.png")
+# generate_png(x, [y[1] for y in b5Data], "blue", "files/avgCaseScattered.png")
+# generate_png(x, [y[1] for y in b10Data], "orange", "files/avgCaseScattered.png")
+# generate_png(x, [y[1] for y in rnData], "red", "files/avgCaseScattered.png")
+
+# --------------------------------------------
+data = [avlData, b1Data, b5Data, b10Data, rnData]
+yWorst = [[y[0] for y in di] for di in data]
+yAvg = [[y[1] for y in di] for di in data]
+colorSet = ["blue", "magenta", "green", "black", "red"]
+labelSet = ["Avl Tree", "B-tree dg.1", "B-tree dg.5", "B-tree dg.10", "Red-black tree"]
+
+# Pior caso
+
+generate_scatter(x, yWorst, colorSet, labelSet, "files/worstCaseScattered.png")
 
 # Caso médio
-generate_png(x, [y[1] for y in avlData], "green", "files/avgCaseScattered.png")
-generate_png(x, [y[1] for y in b1Data], "black", "files/avgCaseScattered.png")
-generate_png(x, [y[1] for y in b5Data], "blue", "files/avgCaseScattered.png")
-generate_png(x, [y[1] for y in b10Data], "orange", "files/avgCaseScattered.png")
-generate_png(x, [y[1] for y in rnData], "red", "files/avgCaseScattered.png")
 
-# generate_png(x, [y[0] for y in avlData], "red", "../files/avl.png")
-# generate_png(x, [y[1] for y in avlData], "blue", "../files/avl.png")
-# print(len(x))
-# print(len([y[0] for y in avlData]))
-
-# for i in range(0, 1000):
-#   print(float(avlMedium[i].split()[1]))
+generate_scatter(x, yAvg, colorSet, labelSet, "files/avgCaseScattered.png")

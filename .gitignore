@@ -3,3 +3,4 @@
 **/*.o
 files/*
 !files/.gitkeep
+**/__pycache__

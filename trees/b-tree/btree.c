@@ -1,131 +1,161 @@
 #include <stdlib.h>
 #include "btree.h"
 
+// This find the index that the element should be inserted, given a sorted array
+int findIndex(int* arr, int size, int key) {
+  int index = 0;
 
-int encontrarIndice(int* arr, int size, int valor) {
-  int i = 0;
-  while (arr[i] != -1 && valor > arr[i] && i < size)
-    i++;
-  return i;
+  while (index < size) {
+    if (key <= arr[index] || arr[index] == -1)
+      break;
+    index++;
+  }
+
+  return index;
 }
 
-No* criarNo(ArvoreB* arvore) {
-  No* no = malloc(sizeof(No));
+// Insertion in an int array, given an index
+void insertion(int* arr, int index, int size, int key) {
+  if (index > size)
+    return;
 
-  int max = arvore->ordem * 2;
-  no->chaves = malloc((max + 1) * sizeof(int));
-  no->filhos = malloc((max + 2) * sizeof(No*));
-  no->qtdChaves = 0;
+  for (int i = size - 2; i >= index; i--) {
+    arr[i + 1] = arr[i];
+  }
+  arr[index] = key;
+}
 
+// This create a Btree (API)
+Btree* createBtree(int order) {
+  if (order <= 0)
+    return NULL;
+
+  Btree* btree = malloc(sizeof(Btree));
+  btree->order = order;
+  btree->root = NULL;
+  return btree;
+}
+
+// This simply create a Btree node, with every element of it set to NULL.
+NodeB* createBtreeNode(Btree* btree) {
+  int max = btree->order * 2;
+
+  NodeB* node = malloc(sizeof(NodeB));
+  node->qtdKeys = 0;
+  node->father = NULL;
+
+  node->keys = malloc((max + 1) * sizeof(int));
   for (int i = 0; i < max + 1; i++) {
-    no->chaves[i] = -1;
+    node->keys[i] = -1;
   }
 
+  node->children = malloc((max + 2) * sizeof(NodeB*));
   for (int i = 0; i < max + 2; i++) {
-    no->filhos[i] = NULL;
+    node->children[i] = NULL;
   }
 
-  return no;
+  return node;
 }
 
-void destruirNo(ArvoreB* arvore, No* no) {
-  if (no != NULL) {
-    int max = arvore->ordem * 2;
-    for (int i = 0; i < max + 2; i++) {
-      destruirNo(arvore, no->filhos[i]);
+// This will split the node into two, left and right.
+void splitNodes(Btree *btree, NodeB **node, NodeB **left, NodeB **right) {
+  NodeB *l = createBtreeNode(btree);
+  NodeB *r = createBtreeNode(btree);
+
+  NodeB* cur = *node;
+  int order = btree->order;
+  int max = order * 2;
+
+  for (int i = 0; i < order; i++) {
+    l->keys[i] = cur->keys[i];
+    l->children[i] = cur->children[i];
+  }
+  l->children[order] = cur->children[order];
+  r->children[0] = cur->children[order + 1];
+  for (int i = order + 1; i <= max; i++) {
+    r->keys[i - (order + 1)] = cur->keys[i];
+    r->children[i - order] = cur->children[i + 1];
+  }
+
+  // If the node does not have a father, it is the root of the tree.
+  // In this case, the tree needs a new root.
+  if (cur->father == NULL) {
+    cur->father = createBtreeNode(btree);
+    btree->root = cur->father;
+  }
+
+  l->father = cur->father;
+  r->father = cur->father;
+  l->qtdKeys = order;
+  r->qtdKeys = order;
+
+  *left = l;
+  *right = r;
+
+  free(*node);
+}
+
+// Insertion into a Btree node. This insertion can be in a leaf (left 
+// and right are both NULL) or from a promotion (recursive call)
+void insertIntoBtreeNode(Btree *btree, NodeB *node, int key, NodeB **left, NodeB **right) {
+  int order = btree->order;
+  int max = order * 2;
+
+  // Find index of keys array
+  int index = findIndex(node->keys, max, key);
+  insertion(node->keys, index, max + 1, key);
+  node->qtdKeys++;
+
+  // If left node or right node isn't null, the insertion came from a
+  // previous promotion and the children needs to be shifted 
+  if (left != NULL || right != NULL) {
+    node->children[index] = *left;
+
+    for (int i = max + 1; i >= index + 1; i--) {
+      node->children[i + 1] = node->children[i];
     }
-    free(no);
+    node->children[index + 1] = *right;
+  }
+
+  // It needs a promotion, because the size of the keys array has passed
+  // its maximum
+  if (node->qtdKeys > max) {
+    NodeB *newLeft, *newRight;
+    int promotedKey = node->keys[order];
+    splitNodes(btree, &node, &newLeft, &newRight);
+    insertIntoBtreeNode(btree, newLeft->father, promotedKey, &newLeft, &newRight);
   }
 }
 
-void inserirNoVetor(ArvoreB* arvore, No* no, int valor, No* esq, No* dir) {
-  int max = 2 * arvore->ordem;
-
-  // Inserir no vetor
-  int i = encontrarIndice(no->chaves, max + 1, valor);
-  for (int j = max - 1; j >= i; j--) {
-    no->chaves[j + 1] = no->chaves[j];
-  }
-  no->chaves[i] = valor;
-  no->qtdChaves++;
-
-  // Atualizar o vetor de filhos
-  if (esq != NULL || dir != NULL) {
-    no->filhos[i] = esq;
-    for (int j = max + 1; j >= i + 1; j--) {
-      no->filhos[j + 1] = no->filhos[j];
-    }
-    no->filhos[i + 1] = dir;
+// Insert a key into Btree function (API)
+void insertBtree(Btree* btree, int key) {
+  if (key <= 0) {
+    return;
   }
 
-  // Quebrar o vetor, se ultrapassar a quantidade máxima
-  if (no->qtdChaves > max) {
-    int mid = max / 2;
-    No* esquerda = criarNo(arvore);
-    No* direita = criarNo(arvore);
-    for (int c = 0; c < max + 1; c++) {
-      if (c < mid) {
-        esquerda->chaves[c] = no->chaves[c];
-        esquerda->filhos[c] = no->filhos[c];
-      } else if (c == mid) {
-        esquerda->filhos[c] = no->filhos[c];
-        direita->filhos[c - mid] = no->filhos[c + 1];
-      } else {
-        direita->chaves[c - mid - 1] = no->chaves[c];
-        direita->filhos[c - mid] = no->filhos[c + 1];
-      }
-    }
-    esquerda->qtdChaves = mid;
-    direita->qtdChaves = mid;
+  NodeB* node;
 
-    No* pai = no->pai;
-    if (pai == NULL) {
-      pai = criarNo(arvore);
-      arvore->raiz = pai;
-    }
-    esquerda->pai = pai;
-    direita->pai = pai;
-    int midElem = no->chaves[mid];
-    free(no);
-    inserirNoVetor(arvore, pai, midElem, esquerda, direita);
+  // Case in which the tree is empty
+  if (btree->root == NULL) {
+    node = createBtreeNode(btree);
+    node->keys[0] = key;
+    node->qtdKeys++;
+    btree->root = node;
+    return;
   }
-}
 
-// -------------------- API --------------------
+  node = btree->root;
+  int max = btree->order * 2;
 
-ArvoreB* criarArvoreB(int ordem) {
-  ArvoreB* arvore = malloc(sizeof(ArvoreB));
-  
-  arvore->ordem = ordem;
-  arvore->raiz = NULL;
-
-  return arvore;
-}
-
-void inserirNaArvoreB(ArvoreB* arvore, int valor) {
-  if (arvore->raiz == NULL) {
-    No* raiz = criarNo(arvore);
-    raiz->chaves[0] = valor;
-    raiz->qtdChaves++;
-    arvore->raiz = raiz;
-  } else {
-    No* no = arvore->raiz;
-    int max = 2 * arvore->ordem;
-    while (1) {
-      if (no->filhos[0] != NULL) {
-        int i = encontrarIndice(no->chaves, max, valor);
-        no = no->filhos[i];
-      } else {
-        inserirNoVetor(arvore, no, valor, NULL, NULL);
-        break;
-      }
+  // Here it will find the leaf and insert into it, passing NULL and NULL as
+  // left and right, because it's not an insertion that came from a promotion
+  while (1) {
+    int index = findIndex(node->keys, max, key);
+    if (node->children[index] == NULL) {
+      insertIntoBtreeNode(btree, node, key, NULL, NULL);
+      break;
+    } else {
+      node = node->children[index];
     }
   }
 }
-
-void destruirArvoreB(ArvoreB* arvore) {
-  destruirNo(arvore, arvore->raiz);
-  free(arvore);
-}
-
-// -------------------- --- --------------------

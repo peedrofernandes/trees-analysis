@@ -1,20 +1,22 @@
-#ifndef B_TREE_H
-#define B_TREE_H
+#include <stdlib.h>
 
-typedef struct noB {
-    int total;
-    int* chaves;
-    struct noB** filhos;
-    struct noB* pai; 
-} NoB;
+typedef struct nodeb {
+  int qtdKeys;
+  int* keys;
+  struct nodeb** children;
+  struct nodeb* father;
+} NodeB;
 
-typedef struct arvoreb {
-  NoB* raiz;
-  int ordem;
-} ArvoreB;
+typedef struct btree {
+  NodeB* root;
+  int order;
+} Btree;
 
-ArvoreB* criarArvoreB(int ordem, int* qtd);
-void inserirNaArvoreB(ArvoreB* arvore, int valor, int* qtd);
-void destruirArvoreB(ArvoreB* arvore);
+// Insert a key into Btree function (API)
+void insertBtree(Btree* btree, int key, int *qtd);
 
-#endif
+// This create a Btree (API)
+Btree* createBtree(int order, int *qtd);
+
+// This destroys the tree (API)
+void destroyBtree(Btree* btree);

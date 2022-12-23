@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "btree-new.h"
+#include "btree.h"
 
 int main() {
   Btree *btree = createBtree(1);

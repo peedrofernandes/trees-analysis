@@ -6,35 +6,6 @@
 #include "b-tree/btree-counter.h"
 #include "red-black-tree/redblacktree-counter.h"
 
-// int main() {
-//     FILE *f = fopen("rubroNegra.txt", "w");
-//     if(f == NULL){
-//         printf("Erro na abertura de arquivo");
-//         return 1;
-//     }
-//     Arvore* a = criar();    
-//     for (int i = 1; i <= 1000; i++) {
-//         count = 0;
-//         adicionar(a, rand() % 1000);
-//         fprintf(f, "%d - %d\n",i, count);
-//     }
-//     free(a);
-//     float v[1000] = {0};
-//     for(int i = 1; i <= 10;i++){
-//         Arvore* a = criar(); 
-//         for (int j = 0; j < 1000; j++) {
-//             count = 0;
-//             adicionar(a, rand() % 1000);
-//             v[j] += count;
-//         }
-//         free(a);
-//     }
-    
-//     for(int i = 0; i < 1000; i++){
-//         fprintf(f, "%d - %.0f\n",i+1, ceil(v[i]/10));
-//     }
-// }
-
 #define arquivoAvl "files/avl.txt"
 #define arquivoB1 "files/b1.txt"
 #define arquivoB5 "files/b5.txt"
@@ -58,9 +29,9 @@ int main() {
   int qAvl = 0, qB1 = 0, qB5 = 0, qB10 = 0, qRn = 0;
 
   NoAVL* avl = NULL;
-  ArvoreB *b1 = criarArvoreB(1, &qB1);
-  ArvoreB *b5 = criarArvoreB(5, &qB1);
-  ArvoreB *b10 = criarArvoreB(10, &qB5);
+  Btree *b1 = createBtree(1, &qB1);
+  Btree *b5 = createBtree(5, &qB1);
+  Btree *b10 = createBtree(10, &qB5);
   ArvoreRN *rn = criarArvoreRubroNegra(&qRn);
 
   // PIOR CASO
@@ -74,9 +45,9 @@ int main() {
   for (int i = 1; i <= 1000; i++) {
     qAvl = 0, qB1 = 0, qB5 = 0, qB10 = 0, qRn = 0;
     avl = inserirNaAvl(avl, i, &qAvl);
-    inserirNaArvoreB(b1, i, &qB1);
-    inserirNaArvoreB(b5, i, &qB5);
-    inserirNaArvoreB(b10, i, &qB10);
+    insertBtree(b1, i, &qB1);
+    insertBtree(b5, i, &qB5);
+    insertBtree(b10, i, &qB10);
     inserirNaArvoreRubroNegra(rn, i, &qRn);
 
     fprintf(avlFile, "%d %d\n", i, qAvl);
@@ -87,9 +58,9 @@ int main() {
   }
 
   destruirAvl(avl);
-  destruirArvoreB(b1);
-  destruirArvoreB(b5);
-  destruirArvoreB(b10);
+  destroyBtree(b1);
+  destroyBtree(b5);
+  destroyBtree(b10);
   destruirArvoreRubroNegra(rn);
 
   fprintf(avlFile, "CASO MEDIO\n");
@@ -105,17 +76,17 @@ int main() {
   // ArvoreRN** rn = criarArvoreRubroNegra(&qRn);
 
   NoAVL **avlArray = malloc(10 * sizeof(NoAVL*));
-  ArvoreB **b1Array = malloc(10 * sizeof(ArvoreB*));
-  ArvoreB **b5Array = malloc(10 * sizeof(ArvoreB *));
-  ArvoreB **b10Array = malloc(10 * sizeof(ArvoreB *));
-  ArvoreRN **rnArray = malloc(10 * sizeof(ArvoreRN *));
+  Btree **b1Array = malloc(10 * sizeof(Btree*));
+  Btree **b5Array = malloc(10 * sizeof(Btree*));
+  Btree **b10Array = malloc(10 * sizeof(Btree*));
+  ArvoreRN **rnArray = malloc(10 * sizeof(ArvoreRN*));
 
 
   for (int i = 0; i < 10; i++) {
     avlArray[i] = NULL;
-    b1Array[i] = criarArvoreB(1, &qB1);
-    b5Array[i] = criarArvoreB(5, &qB5);
-    b10Array[i] = criarArvoreB(10, &qB10);
+    b1Array[i] = createBtree(1, &qB1);
+    b5Array[i] = createBtree(5, &qB5);
+    b10Array[i] = createBtree(10, &qB10);
     rnArray[i] = criarArvoreRubroNegra(&qRn);
   }
 
@@ -126,9 +97,9 @@ int main() {
       int val = abs(rand() % 1000);
 
       avlArray[j] = inserirNaAvl(avlArray[j], val, &qAvl);
-      inserirNaArvoreB(b1Array[j], val, &qB1);
-      inserirNaArvoreB(b5Array[j], val, &qB5);
-      inserirNaArvoreB(b10Array[j], val, &qB10);
+      insertBtree(b1Array[j], val, &qB1);
+      insertBtree(b5Array[j], val, &qB5);
+      insertBtree(b10Array[j], val, &qB10);
       inserirNaArvoreRubroNegra(rnArray[j], val, &qRn);
     }
 
@@ -141,9 +112,9 @@ int main() {
 
   for (int i = 0; i < 10; i++) {
     destruirAvl(avlArray[i]);
-    destruirArvoreB(b1Array[i]);
-    destruirArvoreB(b5Array[i]);
-    destruirArvoreB(b10Array[i]);
+    destroyBtree(b1Array[i]);
+    destroyBtree(b5Array[i]);
+    destroyBtree(b10Array[i]);
     destruirArvoreRubroNegra(rnArray[i]);
   }
 
